@@ -5,6 +5,7 @@ import { varAlpha } from 'minimal-shared/utils';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import ButtonBase from '@mui/material/ButtonBase';
@@ -18,13 +19,18 @@ import { hexToChannel } from '../home/home-view';
 import { PhotoLightbox } from './photo-lightbox';
 import { ListMore, ListSearch, useListTools } from './list-tools';
 
+const COPY = { en: { wiki: 'See it on Wikipedia' }, mn: { wiki: 'Wikipedia-д харах' } };
+
+/** English article (the card's `wiki` title) — where the full story and picture live. */
+const wikiUrl = (title) => `https://en.wikipedia.org/wiki/${encodeURIComponent(title.replace(/ /g, '_'))}`;
+
 const cardText = (item) =>
   [item.title, item.subtitle].flatMap((l) => (l ? [l.en, l.mn] : [])).join(' ');
 
 // ----------------------------------------------------------------------
 
 export function CardsVisual({ visual, color }) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const items = useMemo(() => visual.items ?? [], [visual.items]);
   const tools = useListTools(items, cardText);
   // The viewer steps through every picture of the lesson, not just the visible ones.
@@ -51,6 +57,8 @@ export function CardsVisual({ visual, color }) {
               p: 2.5,
               pt: item.photo ? 0 : 2.5,
               position: 'relative',
+              display: 'flex',
+              flexDirection: 'column',
               borderTop: `4px solid ${accent}`,
               bgcolor: varAlpha(hexToChannel(accent), 0.04),
               transition: 'box-shadow 0.2s, transform 0.2s',
@@ -144,6 +152,29 @@ export function CardsVisual({ visual, color }) {
                 </Typography>
               ))}
             </Stack>
+            {item.wiki && (
+              <Link
+                href={wikiUrl(item.wiki)}
+                target="_blank"
+                rel="noopener"
+                variant="caption"
+                underline="hover"
+                sx={{
+                  mt: 'auto',
+                  pt: 1.5,
+                  alignSelf: 'flex-start',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 0.5,
+                  color: 'text.secondary',
+                  fontWeight: 600,
+                }}
+              >
+                <Iconify icon="mdi:wikipedia" width={16} />
+                {COPY[lang].wiki}
+                <Iconify icon="eva:external-link-fill" width={14} />
+              </Link>
+            )}
           </Card>
         );
       })}

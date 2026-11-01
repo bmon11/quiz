@@ -13,6 +13,7 @@ import { useLang } from 'src/locales';
 import { Iconify } from 'src/components/iconify';
 
 import { GeoMap } from './geo-map';
+import { PlaceProfile } from './place-profile';
 import { hexToChannel } from '../../home/home-view';
 
 // ----------------------------------------------------------------------
@@ -119,6 +120,8 @@ export function MapVisual({ visual, color }) {
                 ))}
               </Box>
             )}
+            {/* The lesson's own lines above; the place's full profile below. */}
+            <PlaceProfile map={visual.map} id={item.id} color={color} />
           </>
         ) : (
           <Stack direction="row" spacing={1} alignItems="center" sx={{ color: 'text.secondary' }}>

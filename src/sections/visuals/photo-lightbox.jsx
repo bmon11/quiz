@@ -30,7 +30,11 @@ export function PhotoLightbox({ items, index, onClose }) {
     height: photo.height,
     alt: t(title),
     title: t(title),
-    description: [subtitle && t(subtitle), `Wikimedia Commons · ${decodeURIComponent(photo.file).replace(/_/g, ' ')}`]
+    // Commons files are free licences; `nonFree` ones are Wikipedia's fair-use copies.
+    description: [
+      subtitle && t(subtitle),
+      `${photo.nonFree ? 'Wikipedia · fair use' : 'Wikimedia Commons'} · ${decodeURIComponent(photo.file).replace(/_/g, ' ')}`,
+    ]
       .filter(Boolean)
       .join('\n'),
   }));

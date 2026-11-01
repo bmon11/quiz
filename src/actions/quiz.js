@@ -33,6 +33,16 @@ export function useTopic(slug) {
   );
 }
 
+/** A map region's profile (centre, former names, symbols, facts); null until tapped or when missing. */
+export function usePlace(map, id) {
+  const { data, isLoading } = useSWR(map && id ? endpoints.place(map, id) : null, fetcher, {
+    revalidateOnFocus: false,
+    revalidateIfStale: false,
+    shouldRetryOnError: false,
+  });
+  return { place: data ?? null, placeLoading: isLoading };
+}
+
 export function useTopicStats(slug, refreshKey) {
   const { data } = useSWR(
     slug ? [endpoints.topicStats(slug), { params: { r: refreshKey } }] : null,
