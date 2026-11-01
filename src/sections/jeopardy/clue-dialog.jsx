@@ -18,6 +18,7 @@ import { checkJeopardy } from 'src/actions/quiz';
 import { Iconify } from 'src/components/iconify';
 
 import { ReportDialog } from '../quiz/report-dialog';
+import { QuestionMap } from '../visuals/map/question-map';
 import { JEOPARDY_BLUE, JEOPARDY_GOLD } from './jeopardy-board';
 
 // ----------------------------------------------------------------------
@@ -243,6 +244,14 @@ export function ClueDialog({ column, clue, dailyDouble, players, control, onDone
             >
               {t(question.prompt)}
             </Typography>
+            <Box sx={{ mb: 2 }}>
+              <QuestionMap
+                map={reveal?.map ?? question.map}
+                answer={reveal ? (reveal.map?.answer ?? []) : undefined}
+                color={JEOPARDY_GOLD}
+                maxHeight={question.map?.locate && !reveal ? 340 : 240}
+              />
+            </Box>
 
             <Box sx={{ flex: 1 }} />
 

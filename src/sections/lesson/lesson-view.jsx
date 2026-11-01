@@ -22,6 +22,7 @@ import { Iconify } from 'src/components/iconify';
 import { BackButton, ErrorState, LoadingState } from 'src/components/state-views';
 
 import { hexToChannel } from '../home/home-view';
+import { MapVisual } from '../visuals/map/map-visual';
 import { cosmicSx, Starfield } from '../visuals/starfield';
 import { VISUAL_ICONS, VisualRenderer } from '../visuals/visual-renderer';
 
@@ -142,6 +143,24 @@ export function LessonView({ slug, lessonName }) {
             </Stack>
           )}
           <VisualRenderer visual={lesson.visual} color={topic.color} />
+        </Card>
+      )}
+
+      {/* Geography lessons that list places also show them on a map. */}
+      {lesson.map && lesson.visual?.kind !== 'map' && (
+        <Card sx={{ p: { xs: 2, md: 3 }, mb: 4 }}>
+          <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2.5 }}>
+            <Iconify icon={VISUAL_ICONS.map} width={22} sx={{ color: topic.color }} />
+            <Typography variant="subtitle1" sx={{ flexGrow: 1 }}>
+              {s.visualTitle.map}
+            </Typography>
+            <Chip
+              size="small"
+              label={s.itemCount(lesson.map.items.length)}
+              sx={{ fontWeight: 700, color: topic.color, bgcolor: varAlpha(channel, 0.12) }}
+            />
+          </Stack>
+          <MapVisual visual={lesson.map} color={topic.color} />
         </Card>
       )}
 

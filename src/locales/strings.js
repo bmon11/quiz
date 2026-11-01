@@ -28,6 +28,7 @@ export const STRINGS = {
     prevLesson: 'Previous lesson',
     overview: 'Overview',
     itemCount: (n) => `${n} items`,
+    mapHint: 'Tap a region on the map or a name below',
     visualTitle: {
       bar: 'Compared by number',
       donut: 'Share of the whole',
@@ -38,6 +39,7 @@ export const STRINGS = {
       timeline: 'Timeline',
       orbit: 'Solar system',
       zodiac: 'The wheel',
+      map: 'On the map',
     },
     question: 'Question',
     of: 'of',
@@ -304,6 +306,7 @@ export const STRINGS = {
     prevLesson: 'Өмнөх хичээл',
     overview: 'Тойм',
     itemCount: (n) => `${n} зүйл`,
+    mapHint: 'Газрын зураг дээрх бүс эсвэл доорх нэр дээр дарна уу',
     visualTitle: {
       bar: 'Тоогоор харьцуулбал',
       donut: 'Нийтэд эзлэх хувь',
@@ -314,6 +317,7 @@ export const STRINGS = {
       timeline: 'Он дарааллаар',
       orbit: 'Нарны аймаг',
       zodiac: 'Ордны хүрд',
+      map: 'Газрын зураг дээр',
     },
     question: 'Асуулт',
     of: '/',

@@ -16,6 +16,7 @@ import { Iconify } from 'src/components/iconify';
 
 import { ReportDialog } from './report-dialog';
 import { FamilyBranch } from '../family/family-branch';
+import { QuestionMap } from '../visuals/map/question-map';
 
 // ----------------------------------------------------------------------
 
@@ -76,6 +77,15 @@ export function QuestionSlide({
       >
         {t(question.prompt)}
       </Typography>
+
+      <Box sx={{ mb: question.map || reply?.map ? 2 : 0 }}>
+        <QuestionMap
+          map={reply?.map ?? question.map}
+          answer={answered ? (reply.map?.answer ?? []) : undefined}
+          color={color}
+          maxHeight={question.map?.locate && !answered ? 300 : 200}
+        />
+      </Box>
 
       {/* Pushes the choices toward the thumb on tall phones. */}
       {!answered && <Box sx={{ flex: 1, minHeight: 8 }} />}

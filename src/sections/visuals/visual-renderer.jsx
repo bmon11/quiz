@@ -7,6 +7,7 @@ import { CardsVisual } from './cards-visual';
 import { DonutVisual } from './donut-visual';
 import { PairsVisual } from './pairs-visual';
 import { OrbitVisual } from './orbit-visual';
+import { MapVisual } from './map/map-visual';
 import { ZodiacVisual } from './zodiac-visual';
 import { TimelineVisual } from './timeline-visual';
 
@@ -30,6 +31,7 @@ export const VISUAL_ICONS = {
   timeline: 'solar:history-bold-duotone',
   orbit: 'solar:planet-2-bold-duotone',
   zodiac: 'solar:stars-minimalistic-bold-duotone',
+  map: 'solar:map-bold-duotone',
 };
 
 const RENDERERS = {
@@ -42,6 +44,7 @@ const RENDERERS = {
   timeline: TimelineVisual,
   orbit: OrbitVisual,
   zodiac: ZodiacVisual,
+  map: MapVisual,
 };
 
 export function VisualRenderer({ visual, color }) {
