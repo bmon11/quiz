@@ -11,9 +11,9 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 
-import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
+import { paths, lessonSlug } from 'src/routes/paths';
 
 import { useLang } from 'src/locales';
 import { useTopic } from 'src/actions/quiz';
@@ -36,12 +36,19 @@ const visualCount = (v) =>
   v?.signs?.length ??
   0;
 
-export function LessonView({ slug, lessonKey }) {
+/**
+ * `lessonName` is the URL part after the topic. A lesson moved to another
+ * category keeps its key ("pubquiz.x" shown under /art/x), so match on the name
+ * and prefer the key that carries this topic's prefix.
+ */
+export function LessonView({ slug, lessonName }) {
   const { s, t } = useLang();
   const router = useRouter();
   const { topic, lessons, topicLoading, topicError, retry } = useTopic(slug);
 
-  const index = lessons.findIndex((l) => l.key === lessonKey);
+  const exact = lessons.findIndex((l) => l.key === `${slug}.${lessonName}`);
+  const index = exact >= 0 ? exact : lessons.findIndex((l) => lessonSlug(l.key) === lessonName);
+  const lessonKey = lessons[index]?.key;
   const prev = index > 0 ? lessons[index - 1] : null;
   const next = index >= 0 ? lessons[index + 1] : null;
 
