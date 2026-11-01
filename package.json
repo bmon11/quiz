@@ -1,0 +1,62 @@
+{
+  "name": "quiz-web",
+  "version": "1.0.0",
+  "description": "Quiz — learn Greek & Roman gods and world geography with pictures and charts",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3040",
+    "start": "next start -p 3040",
+    "build": "next build --webpack",
+    "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
+    "lint:fix": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",
+    "fm:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\"",
+    "fm:fix": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
+    "fix:all": "npm run lint:fix && npm run fm:fix",
+    "clean": "rm -rf node_modules .next out dist build"
+  },
+  "engines": {
+    "node": "22.x"
+  },
+  "dependencies": {
+    "@dagrejs/dagre": "^1.1.4",
+    "@emotion/cache": "^11.14.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@fontsource-variable/inter": "^5.1.1",
+    "@iconify/react": "^5.1.0",
+    "@mui/lab": "^6.0.0-beta.21",
+    "@mui/material": "^6.3.0",
+    "@mui/material-nextjs": "^6.3.0",
+    "@mui/x-data-grid": "^7.23.5",
+    "@mui/x-date-pickers": "^7.23.3",
+    "@xyflow/react": "^12.11.3",
+    "apexcharts": "^5.3.6",
+    "axios": "^1.7.9",
+    "dayjs": "^1.11.13",
+    "es-toolkit": "^1.31.0",
+    "framer-motion": "^11.15.0",
+    "minimal-shared": "^1.0.5",
+    "next": "^16.1.6",
+    "nprogress": "^0.2.0",
+    "react": "^18.3.1",
+    "react-apexcharts": "^1.9.0",
+    "react-dom": "^18.3.1",
+    "simplebar-react": "^3.3.0",
+    "stylis": "^4.3.4",
+    "stylis-plugin-rtl": "^2.1.1",
+    "swr": "^2.3.8"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@svgr/webpack": "^8.1.0",
+    "eslint": "^9.17.0",
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-perfectionist": "^4.4.0",
+    "eslint-plugin-react": "^7.37.3",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "globals": "^15.14.0",
+    "prettier": "^3.4.2"
+  }
+}
