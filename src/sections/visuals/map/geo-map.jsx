@@ -265,7 +265,9 @@ export function GeoMap({
                 const text = lang === 'mn' ? sh.mn || sh.name : sh.name;
                 // Only where the name fits (roughly) inside its region on screen.
                 const wide = (sh.b[1][0] - sh.b[0][0]) / px;
-                const fits = wide > text.length * fontPx * 0.5 || sh.id === selected;
+                // Named on purpose (an array) or selected: always shown.
+                const fits =
+                  Array.isArray(labels) || sh.id === selected || wide > text.length * fontPx * 0.5;
                 if (!fits) return null;
                 return (
                   <text
@@ -324,7 +326,7 @@ export function GeoMap({
             display: 'block',
             mt: 0.5,
             fontSize: 10,
-            textAlign: 'right',
+            textAlign: dark ? 'left' : 'right',
             color: dark ? 'grey.500' : 'text.disabled',
           }}
         >
