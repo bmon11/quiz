@@ -12,6 +12,12 @@ import axios, { TOKEN_KEY, readToken, endpoints } from 'src/lib/axios';
 
 const AuthContext = createContext(null);
 
+/** Lowest to highest — same ladder as the API. */
+export const ROLES = ['user', 'contributor', 'editor', 'admin'];
+
+/** True when `user` has at least role `min`. */
+export const hasRole = (user, min) => !!user && ROLES.indexOf(user.role) >= ROLES.indexOf(min);
+
 const storeToken = (token) => {
   try {
     if (token) window.localStorage.setItem(TOKEN_KEY, token);
@@ -77,7 +83,13 @@ export function AuthProvider({ children }) {
     () => ({
       user,
       checking,
-      isAdmin: user?.role === 'admin',
+      isAdmin: hasRole(user, 'admin'),
+      isEditor: hasRole(user, 'editor'),
+      // Contributors and up open the admin page.
+      canContribute: hasRole(user, 'contributor'),
+      /** Editors change anything; contributors what they added. */
+      mayEdit: (item) =>
+        hasRole(user, 'editor') || (!!item?.createdBy && item.createdBy === user?.id),
       login,
       register,
       loginWithGoogle,

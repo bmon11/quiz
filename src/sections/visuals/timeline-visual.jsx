@@ -14,14 +14,22 @@ import TimelineOppositeContent, {
 
 import { useLang } from 'src/locales';
 
+import { ListMore, ListSearch, useListTools } from './list-tools';
+
+const eventText = (item) => [item.when, item.title, item.body].flatMap((l) => [l.en, l.mn]).join(' ');
+
 // ----------------------------------------------------------------------
 
 export function TimelineVisual({ visual, color }) {
   const { t } = useLang();
   const wide = useMediaQuery((theme) => theme.breakpoints.up('md'));
   const items = visual.items ?? [];
+  const tools = useListTools(items, eventText, { page: 20 });
+  const last = tools.visible.length - 1;
 
   return (
+    <>
+    <ListSearch tools={tools} />
     <Timeline
       position={wide ? 'alternate' : 'right'}
       sx={
@@ -30,7 +38,7 @@ export function TimelineVisual({ visual, color }) {
           : { p: 0, [`& .${timelineOppositeContentClasses.root}`]: { flex: 0, p: 0 } }
       }
     >
-      {items.map((item, i) => (
+      {tools.visible.map(({ item, index: i }, row) => (
         <TimelineItem key={i}>
           <TimelineOppositeContent sx={{ display: wide ? 'block' : 'none', pt: 1.75 }}>
             <Typography variant="subtitle2" sx={{ color }}>
@@ -52,7 +60,7 @@ export function TimelineVisual({ visual, color }) {
             >
               {i + 1}
             </TimelineDot>
-            {i < items.length - 1 && <TimelineConnector />}
+            {row < last && <TimelineConnector />}
           </TimelineSeparator>
           <TimelineContent sx={{ pb: 3 }}>
             {!wide && (
@@ -68,5 +76,7 @@ export function TimelineVisual({ visual, color }) {
         </TimelineItem>
       ))}
     </Timeline>
+    <ListMore tools={tools} />
+    </>
   );
 }

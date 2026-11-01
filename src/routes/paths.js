@@ -8,6 +8,7 @@ export const paths = {
   login: (next) => (next ? `/login?next=${encodeURIComponent(next)}` : '/login'),
   me: '/me',
   admin: '/admin',
+  jeopardy: '/jeopardy',
   topic: (topic) => `/${topic}`,
   lesson: (topic, lessonKey) => `/${topic}/${lessonSlug(lessonKey)}`,
   quiz: (topic, lessonKey) =>

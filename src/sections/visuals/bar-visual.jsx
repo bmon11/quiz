@@ -13,7 +13,8 @@ export function BarVisual({ visual, color }) {
   const { t, lang } = useLang();
   const items = visual.items ?? [];
   const unit = t(visual.unit);
-  const horizontal = !!visual.horizontal;
+  // A long ranking only reads as horizontal bars with the labels down the side.
+  const horizontal = !!visual.horizontal || items.length > 12;
   const format = (v) => `${Number(v).toLocaleString(lang === 'mn' ? 'mn-MN' : 'en-US')} ${unit}`;
 
   const options = useChart({
@@ -52,7 +53,7 @@ export function BarVisual({ visual, color }) {
   });
 
   const notes = items.filter((i) => i.note);
-  const height = horizontal ? Math.max(280, items.length * 52) : 380;
+  const height = horizontal ? Math.max(280, items.length * (items.length > 20 ? 30 : 52)) : 380;
 
   return (
     <>

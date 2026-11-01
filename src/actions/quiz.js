@@ -73,6 +73,23 @@ export const submitAnswer = async (questionId, choice) =>
 export const submitAttempt = async (payload) =>
   (await axios.post(endpoints.attempts, payload)).data;
 
+/** "This question is wrong" — { questionId, reason, suggested?, note?, lang }. */
+export const reportQuestion = async (payload) => (await axios.post(endpoints.report, payload)).data;
+
+// ----------------------------------------------------------------------
+// Jeopardy
+
+export const fetchJeopardyBoard = async ({ topics, columns }) =>
+  (
+    await axios.get(endpoints.jeopardy.board, {
+      params: { topics: topics?.length ? topics.join(',') : undefined, columns },
+    })
+  ).data;
+
+/** No `choice` = reveal the answer. A miss never reveals it, so others can steal. */
+export const checkJeopardy = async (body) =>
+  (await axios.post(endpoints.jeopardy.check, body)).data;
+
 // ----------------------------------------------------------------------
 // Signed-in player
 
@@ -116,7 +133,27 @@ export function useAdminQuestions(params, enabled) {
   return { list: data ?? null, listError: error, listLoading: isLoading, reload: mutate };
 }
 
+export function useAdminReports(params, enabled) {
+  const { data, error, isLoading, mutate } = useSWR(
+    enabled ? [endpoints.admin.reports, { params }] : null,
+    fetcher,
+    swrOptions
+  );
+  return { reports: data ?? null, reportsError: error, reportsLoading: isLoading, reload: mutate };
+}
+
+export function useAdminUsers(params, enabled) {
+  const { data, error, isLoading, mutate } = useSWR(
+    enabled ? [endpoints.admin.users, { params }] : null,
+    fetcher,
+    swrOptions
+  );
+  return { users: data ?? null, usersError: error, usersLoading: isLoading, reload: mutate };
+}
+
 export const adminApi = {
+  resolveReport: async (id, body) => (await axios.patch(endpoints.admin.report(id), body)).data,
+  setUserRole: async (id, role) => (await axios.patch(endpoints.admin.user(id), { role })).data,
   createTopic: async (body) => (await axios.post(endpoints.admin.topics, body)).data,
   updateTopic: async (slug, body) => (await axios.patch(endpoints.admin.topic(slug), body)).data,
   deleteTopic: async (slug) => (await axios.delete(endpoints.admin.topic(slug))).data,

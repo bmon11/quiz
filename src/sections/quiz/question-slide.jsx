@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { m, AnimatePresence } from 'framer-motion';
 
 import Box from '@mui/material/Box';
@@ -14,6 +14,7 @@ import { useLang } from 'src/locales';
 import { useTap } from 'src/components/use-tap';
 import { Iconify } from 'src/components/iconify';
 
+import { ReportDialog } from './report-dialog';
 import { FamilyBranch } from '../family/family-branch';
 
 // ----------------------------------------------------------------------
@@ -39,6 +40,7 @@ export function QuestionSlide({
 }) {
   const { s, t } = useLang();
   const answered = !!reply;
+  const [reporting, setReporting] = useState(false);
   const showTree = answered && family && question.gods?.length > 0;
 
   return (
@@ -129,12 +131,23 @@ export function QuestionSlide({
           <Typography sx={{ lineHeight: 1.5, color: 'grey.100' }}>
             {t(reply.explanation)}
           </Typography>
-          <Typography variant="caption" sx={{ display: 'block', mt: 1, color: 'grey.400' }}>
-            👥{' '}
-            {reply.correctRate === null || reply.correctRate === undefined
-              ? s.firstToAnswer
-              : s.othersGotIt(reply.correctRate)}
-          </Typography>
+          <Stack direction="row" alignItems="center" spacing={1} sx={{ mt: 1 }}>
+            <Typography variant="caption" sx={{ flex: 1, color: 'grey.400' }}>
+              👥{' '}
+              {reply.correctRate === null || reply.correctRate === undefined
+                ? s.firstToAnswer
+                : s.othersGotIt(reply.correctRate)}
+            </Typography>
+            <Button
+              size="small"
+              onClick={() => setReporting(true)}
+              startIcon={<Iconify icon="solar:flag-linear" width={16} />}
+              sx={{ color: 'grey.400', flexShrink: 0, '&:hover': { color: 'common.white' } }}
+            >
+              {s.reportProblem}
+            </Button>
+          </Stack>
+          <ReportDialog open={reporting} question={question} onClose={() => setReporting(false)} />
 
           {showTree && (
             <Box

@@ -156,7 +156,8 @@ export function QuizStory({ slug, topic, lessonKey, lessonTitle, onClose, onEdge
   // ← → move between slides, 1–4 answer, Enter goes on once answered.
   useEffect(() => {
     const onKey = (event) => {
-      if (event.target.closest?.('input, textarea')) return;
+      // Typing, or a dialog on top (e.g. «report a problem»), keeps the keys.
+      if (event.target.closest?.('input, textarea, .MuiModal-root')) return;
       if (event.key === 'ArrowRight') goTo(index + 1);
       else if (event.key === 'ArrowLeft') goTo(index - 1);
       else if (event.key === 'Enter' && (!question || answers[question.id])) goTo(index + 1);
@@ -173,6 +174,11 @@ export function QuizStory({ slug, topic, lessonKey, lessonTitle, onClose, onEdge
   // answers sit low, where a thumb swiping down lands) still counts. A short tap
   // on a button belongs to the button and never moves the story.
   const onPointerDown = (event) => {
+    // A dialog over the story is portalled, but React still bubbles its events here.
+    if (event.target.closest?.('.MuiModal-root')) {
+      press.current = null;
+      return;
+    }
     const control = !!event.target.closest?.('button, a, [role="radio"]');
     press.current = { x: event.clientX, y: event.clientY, at: Date.now(), control };
   };

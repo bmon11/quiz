@@ -28,7 +28,7 @@ import { AccountMenu } from './account-menu';
 
 export function MainLayout({ children }) {
   const { lang, setLang, s } = useLang();
-  const { user } = useAuth();
+  const { user, canContribute } = useAuth();
   const { mode, systemMode, setMode } = useColorScheme();
   const isDark = (mode === 'system' ? systemMode : mode) === 'dark';
   const pathname = usePathname();
@@ -102,9 +102,9 @@ export function MainLayout({ children }) {
               </Typography>
             </Stack>
 
+            {navLink(paths.jeopardy, s.jeopardy, 'solar:widget-4-bold-duotone')}
             {user && navLink(paths.me, s.myProgress, 'solar:chart-square-bold-duotone')}
-            {user?.role === 'admin' &&
-              navLink(paths.admin, s.admin, 'solar:pen-new-square-bold-duotone')}
+            {canContribute && navLink(paths.admin, s.admin, 'solar:pen-new-square-bold-duotone')}
 
             <ToggleButtonGroup
               exclusive

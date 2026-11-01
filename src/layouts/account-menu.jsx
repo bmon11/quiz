@@ -27,7 +27,7 @@ export function AccountMenu() {
   const { s } = useLang();
   const router = useRouter();
   const pathname = usePathname();
-  const { user, checking, isAdmin, logout } = useAuth();
+  const { user, checking, canContribute, logout } = useAuth();
   const [anchor, setAnchor] = useState(null);
 
   if (checking) return <Box sx={{ width: 40 }} />;
@@ -97,7 +97,13 @@ export function AccountMenu() {
           </ListItemIcon>
           {s.myProgress}
         </MenuItem>
-        {isAdmin && (
+        <MenuItem onClick={() => go(paths.jeopardy)}>
+          <ListItemIcon>
+            <Iconify icon="solar:widget-4-bold-duotone" />
+          </ListItemIcon>
+          {s.jeopardy}
+        </MenuItem>
+        {canContribute && (
           <MenuItem onClick={() => go(paths.admin)}>
             <ListItemIcon>
               <Iconify icon="solar:pen-new-square-bold-duotone" />

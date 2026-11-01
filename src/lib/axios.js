@@ -45,6 +45,8 @@ export const endpoints = {
   quiz: '/quiz',
   deck: '/quiz/deck',
   answer: '/quiz/answer',
+  report: '/quiz/report',
+  jeopardy: { board: '/jeopardy/board', check: '/jeopardy/check' },
   attempts: '/attempts',
   auth: {
     me: '/auth/me',
@@ -61,5 +63,9 @@ export const endpoints = {
     questions: '/admin/questions',
     question: (id) => `/admin/questions/${id}`,
     bulk: '/admin/questions/bulk',
+    reports: '/admin/reports',
+    report: (id) => `/admin/reports/${id}`,
+    users: '/admin/users',
+    user: (id) => `/admin/users/${id}`,
   },
 };

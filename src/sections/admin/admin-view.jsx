@@ -8,8 +8,10 @@ import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Tabs from '@mui/material/Tabs';
+import Badge from '@mui/material/Badge';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import Snackbar from '@mui/material/Snackbar';
@@ -18,6 +20,7 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Pagination from '@mui/material/Pagination';
 import InputAdornment from '@mui/material/InputAdornment';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
@@ -25,11 +28,13 @@ import { RouterLink } from 'src/routes/components';
 
 import { useAuth } from 'src/auth';
 import { useLang } from 'src/locales';
-import { adminApi, useAdminTopics, useAdminQuestions } from 'src/actions/quiz';
+import { adminApi, useAdminTopics, useAdminReports, useAdminQuestions } from 'src/actions/quiz';
 
 import { Iconify } from 'src/components/iconify';
 import { SmartIcon, ErrorState, LoadingState } from 'src/components/state-views';
 
+import { UsersPanel } from './users-panel';
+import { ReportsPanel } from './reports-panel';
 import { hexToChannel } from '../home/home-view';
 import { TopicDialog, ImportDialog, LessonDialog, QuestionDialog } from './content-dialogs';
 
@@ -38,8 +43,13 @@ import { TopicDialog, ImportDialog, LessonDialog, QuestionDialog } from './conte
 export function AdminView() {
   const { s } = useLang();
   const router = useRouter();
-  const { user, checking, isAdmin } = useAuth();
-  const { adminTopics, adminTopicsError, reload } = useAdminTopics(isAdmin);
+  const { user, checking, canContribute, isEditor, isAdmin } = useAuth();
+  const { adminTopics, adminTopicsError, reload } = useAdminTopics(canContribute);
+  // Just the count, for the tab badge.
+  const { reports: reportCount, reload: reloadReportCount } = useAdminReports(
+    { status: 'open', limit: 1 },
+    isEditor
+  );
   const [tab, setTab] = useState('content');
   const [toast, setToast] = useState('');
   const [filter, setFilter] = useState({ topic: '', lesson: '' });
@@ -49,7 +59,7 @@ export function AdminView() {
   }, [checking, user, router]);
 
   if (checking || !user) return <LoadingState />;
-  if (!isAdmin) return <ErrorState message={s.forbidden} />;
+  if (!canContribute) return <ErrorState message={s.forbidden} />;
   if (adminTopicsError) return <ErrorState onRetry={reload} />;
 
   const openQuestions = (topic, lesson = '') => {
@@ -62,11 +72,25 @@ export function AdminView() {
       <Typography variant="h3" sx={{ mb: 0.5 }}>
         {s.adminTitle}
       </Typography>
-      <Typography color="text.secondary" sx={{ mb: 3, maxWidth: 720 }}>
+      <Typography color="text.secondary" sx={{ mb: 1.5, maxWidth: 720 }}>
         {s.adminSubtitle}
       </Typography>
+      <Chip
+        size="small"
+        variant="soft"
+        color={isAdmin ? 'error' : isEditor ? 'warning' : 'info'}
+        icon={<Iconify icon="solar:shield-user-bold" width={16} />}
+        label={`${s.yourRole}: ${s.roles[user.role]} — ${s.roleHints[user.role]}`}
+        sx={{ mb: 2.5, height: 'auto', py: 0.5, '& .MuiChip-label': { whiteSpace: 'normal' } }}
+      />
 
-      <Tabs value={tab} onChange={(_e, v) => setTab(v)} sx={{ mb: 3 }}>
+      <Tabs
+        value={tab}
+        onChange={(_e, v) => setTab(v)}
+        variant="scrollable"
+        allowScrollButtonsMobile
+        sx={{ mb: 3 }}
+      >
         <Tab
           value="content"
           label={s.categories}
@@ -79,16 +103,43 @@ export function AdminView() {
           icon={<Iconify icon="solar:question-square-bold-duotone" />}
           iconPosition="start"
         />
+        {isEditor && (
+          <Tab
+            value="reports"
+            label={
+              <Badge
+                color="error"
+                badgeContent={reportCount?.openTotal || 0}
+                max={99}
+                sx={{ '& .MuiBadge-badge': { right: -14 } }}
+              >
+                {s.reportsTab}
+              </Badge>
+            }
+            icon={<Iconify icon="solar:flag-bold-duotone" />}
+            iconPosition="start"
+            sx={{ pr: 3 }}
+          />
+        )}
+        {isAdmin && (
+          <Tab
+            value="users"
+            label={s.usersTab}
+            icon={<Iconify icon="solar:users-group-rounded-bold-duotone" />}
+            iconPosition="start"
+          />
+        )}
       </Tabs>
 
-      {tab === 'content' ? (
+      {tab === 'content' && (
         <ContentPanel
           topics={adminTopics}
           reload={reload}
           notify={setToast}
           onOpenQuestions={openQuestions}
         />
-      ) : (
+      )}
+      {tab === 'questions' && (
         <QuestionsPanel
           topics={adminTopics}
           filter={filter}
@@ -97,6 +148,17 @@ export function AdminView() {
           notify={setToast}
         />
       )}
+      {tab === 'reports' && isEditor && (
+        <ReportsPanel
+          topics={adminTopics}
+          notify={setToast}
+          onChanged={() => {
+            reloadReportCount();
+            reload();
+          }}
+        />
+      )}
+      {tab === 'users' && isAdmin && <UsersPanel notify={setToast} />}
 
       <Snackbar
         open={!!toast}
@@ -113,6 +175,7 @@ export function AdminView() {
 
 function ContentPanel({ topics, reload, notify, onOpenQuestions }) {
   const { s, t } = useLang();
+  const { isEditor, mayEdit } = useAuth();
   const [topicDialog, setTopicDialog] = useState({ open: false, topic: null });
   const [lessonDialog, setLessonDialog] = useState({ open: false, topicSlug: '', lesson: null });
 
@@ -129,15 +192,17 @@ function ContentPanel({ topics, reload, notify, onOpenQuestions }) {
 
   return (
     <>
-      <Stack direction="row" justifyContent="flex-end" sx={{ mb: 2 }}>
-        <Button
-          variant="contained"
-          startIcon={<Iconify icon="mingcute:add-line" />}
-          onClick={() => setTopicDialog({ open: true, topic: null })}
-        >
-          {s.newCategory}
-        </Button>
-      </Stack>
+      {isEditor && (
+        <Stack direction="row" justifyContent="flex-end" sx={{ mb: 2 }}>
+          <Button
+            variant="contained"
+            startIcon={<Iconify icon="mingcute:add-line" />}
+            onClick={() => setTopicDialog({ open: true, topic: null })}
+          >
+            {s.newCategory}
+          </Button>
+        </Stack>
+      )}
 
       <Stack spacing={2.5}>
         {topics.map((topic) => {
@@ -177,7 +242,7 @@ function ContentPanel({ topics, reload, notify, onOpenQuestions }) {
                 <Button size="small" onClick={() => onOpenQuestions(topic.slug)}>
                   {s.questionsTab}
                 </Button>
-                {custom && (
+                {custom && isEditor && (
                   <>
                     <Tooltip title={s.edit}>
                       <IconButton onClick={() => setTopicDialog({ open: true, topic })}>
@@ -199,6 +264,7 @@ function ContentPanel({ topics, reload, notify, onOpenQuestions }) {
               <Box>
                 {topic.lessons.map((lesson) => {
                   const own = lesson.origin === 'admin';
+                  const editable = own && mayEdit(lesson);
                   return (
                     <Stack
                       key={lesson.key}
@@ -230,7 +296,7 @@ function ContentPanel({ topics, reload, notify, onOpenQuestions }) {
                       >
                         <Iconify icon="solar:eye-bold" width={18} />
                       </IconButton>
-                      {own && (
+                      {editable && (
                         <>
                           <IconButton
                             size="small"
@@ -304,6 +370,8 @@ function ContentPanel({ topics, reload, notify, onOpenQuestions }) {
 
 function QuestionsPanel({ topics, filter, setFilter, reloadTopics, notify }) {
   const { s, t } = useLang();
+  const { isEditor, mayEdit } = useAuth();
+  const [mine, setMine] = useState(!isEditor);
   const [search, setSearch] = useState('');
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
@@ -315,12 +383,13 @@ function QuestionsPanel({ topics, filter, setFilter, reloadTopics, notify }) {
     const timer = setTimeout(() => setQuery(search.trim()), 350);
     return () => clearTimeout(timer);
   }, [search]);
-  useEffect(() => setPage(1), [filter.topic, filter.lesson, query]);
+  useEffect(() => setPage(1), [filter.topic, filter.lesson, query, mine]);
 
   const params = {
     topic: filter.topic || undefined,
     lesson: filter.lesson || undefined,
     q: query || undefined,
+    mine: mine || undefined,
     page,
     limit: 20,
   };
@@ -399,6 +468,11 @@ function QuestionsPanel({ topics, filter, setFilter, reloadTopics, notify }) {
         <Typography variant="subtitle2" color="text.secondary" sx={{ flex: 1 }}>
           {list ? s.totalQuestions(list.total) : ''}
         </Typography>
+        <FormControlLabel
+          control={<Switch checked={mine} onChange={(e) => setMine(e.target.checked)} />}
+          label={s.onlyMine}
+          sx={{ mr: 0 }}
+        />
         <Tooltip title={filter.lesson ? '' : s.pickLesson}>
           <span>
             <Button
@@ -445,6 +519,23 @@ function QuestionsPanel({ topics, filter, setFilter, reloadTopics, notify }) {
                     color={q.origin === 'admin' ? 'info' : 'default'}
                     label={q.origin === 'admin' ? s.custom : s.builtIn}
                   />
+                  {q.author && (
+                    <Chip
+                      size="small"
+                      variant="outlined"
+                      icon={<Iconify icon="solar:user-bold" width={14} />}
+                      label={q.author}
+                    />
+                  )}
+                  {q.openReports > 0 && (
+                    <Chip
+                      size="small"
+                      variant="soft"
+                      color="error"
+                      icon={<Iconify icon="solar:flag-bold" width={14} />}
+                      label={s.reportCount(q.openReports)}
+                    />
+                  )}
                   {q.stats?.attempts > 0 && (
                     <Chip
                       size="small"
@@ -486,12 +577,16 @@ function QuestionsPanel({ topics, filter, setFilter, reloadTopics, notify }) {
                   ))}
                 </Box>
               </Box>
-              <IconButton onClick={() => setDialog({ open: true, question: q })}>
-                <Iconify icon="solar:pen-bold" />
-              </IconButton>
-              <IconButton color="error" onClick={() => remove(q.id)}>
-                <Iconify icon="solar:trash-bin-trash-bold" />
-              </IconButton>
+              {mayEdit(q) && (
+                <>
+                  <IconButton onClick={() => setDialog({ open: true, question: q })}>
+                    <Iconify icon="solar:pen-bold" />
+                  </IconButton>
+                  <IconButton color="error" onClick={() => remove(q.id)}>
+                    <Iconify icon="solar:trash-bin-trash-bold" />
+                  </IconButton>
+                </>
+              )}
             </Stack>
           </Card>
         ))}

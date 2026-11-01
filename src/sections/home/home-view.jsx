@@ -207,6 +207,53 @@ export function HomeView() {
         </Box>
       )}
 
+      <Box component={m.div} variants={varFade('inUp')} sx={{ mb: 4 }}>
+        <CardActionArea
+          component={RouterLink}
+          href={paths.jeopardy}
+          sx={{
+            p: { xs: 2.5, md: 3 },
+            borderRadius: 2,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+            color: 'common.white',
+            background: 'linear-gradient(120deg, #0A16C9 0%, #2333FF 60%, #3D4BFF 100%)',
+          }}
+        >
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 14px)',
+              gap: '3px',
+              flexShrink: 0,
+            }}
+            aria-hidden
+          >
+            {Array.from({ length: 9 }, (_, i) => (
+              <Box
+                key={i}
+                sx={{
+                  width: 14,
+                  height: 10,
+                  borderRadius: 0.25,
+                  bgcolor: i === 4 ? '#FFCC00' : 'rgba(255,255,255,0.35)',
+                }}
+              />
+            ))}
+          </Box>
+          <Box sx={{ flex: 1, minWidth: 0 }}>
+            <Typography variant="h5" sx={{ color: '#FFCC00' }}>
+              {s.jeopardy}
+            </Typography>
+            <Typography variant="body2" sx={{ opacity: 0.9 }}>
+              {s.jeopardyTeaser}
+            </Typography>
+          </Box>
+          <Iconify icon="solar:arrow-right-linear" width={24} />
+        </CardActionArea>
+      </Box>
+
       <Stack
         id="categories"
         direction={{ xs: 'column', sm: 'row' }}

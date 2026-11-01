@@ -60,7 +60,8 @@ export function QuizReader({ slug, topic, lessons, lessonKey, onClose }) {
     const { overflow } = document.body.style;
     document.body.style.overflow = 'hidden';
     const onKey = (event) => {
-      if (event.target.closest?.('input, textarea')) return;
+      // Typing, or a dialog on top (e.g. «report a problem»), keeps the keys.
+      if (event.target.closest?.('input, textarea, .MuiModal-root')) return;
       if (event.key === 'Escape') onClose(current);
       else if (event.key === 'ArrowDown') goTo(index + 1);
       else if (event.key === 'ArrowUp') goTo(index - 1);

@@ -16,6 +16,9 @@ import { Iconify } from 'src/components/iconify';
 import { SmartIcon } from 'src/components/state-views';
 
 import { hexToChannel } from '../home/home-view';
+import { ListMore, ListSearch, useListTools } from './list-tools';
+
+const pairText = (item) => [item.left, item.right].flatMap((l) => [l.en, l.mn]).join(' ');
 
 // ----------------------------------------------------------------------
 
@@ -29,6 +32,7 @@ export function PairsVisual({ visual, color }) {
   const [covered, setCovered] = useState(false);
   const [revealed, setRevealed] = useState({});
   const channel = hexToChannel(color);
+  const tools = useListTools(visual.items ?? [], pairText, { page: 40 });
 
   const toggleCover = (_e, on) => {
     setCovered(on);
@@ -55,8 +59,9 @@ export function PairsVisual({ visual, color }) {
         />
       </Stack>
 
+      <ListSearch tools={tools} />
       <Stack spacing={1}>
-        {(visual.items ?? []).map((item, i) => {
+        {tools.visible.map(({ item, index: i }) => {
           const hidden = covered && !revealed[i];
           return (
             <Box
@@ -110,6 +115,7 @@ export function PairsVisual({ visual, color }) {
           );
         })}
       </Stack>
+      <ListMore tools={tools} />
     </>
   );
 }
