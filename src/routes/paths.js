@@ -9,6 +9,7 @@ export const paths = {
   me: '/me',
   admin: '/admin',
   jeopardy: '/jeopardy',
+  tournament: '/tournament',
   topic: (topic) => `/${topic}`,
   lesson: (topic, lessonKey) => `/${topic}/${lessonSlug(lessonKey)}`,
   quiz: (topic, lessonKey) =>

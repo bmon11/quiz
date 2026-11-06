@@ -191,11 +191,14 @@ export function ResultSlide({
 
 // ----------------------------------------------------------------------
 
-/** A quick quiz spans lessons: name the ones this run went worst in, with a link to practise. */
+/**
+ * A quick quiz (or a tournament game) spans lessons: name the ones this run went
+ * worst in, with a link to practise them in their own topic.
+ */
 function FocusList({ result, slug, lessonKey }) {
   const { s, t } = useLang();
   const weak = (result.breakdown ?? []).filter((row) => row.correct < row.total);
-  if (lessonKey || !weak.length) return null;
+  if ((lessonKey && slug !== 'tournament') || !weak.length) return null;
 
   return (
     <Box sx={{ width: 1, mb: 2.5, textAlign: 'left' }}>
@@ -220,7 +223,7 @@ function FocusList({ result, slug, lessonKey }) {
             <Button
               size="small"
               // A plain link: the open reader keeps its own state, so load the lesson's quiz fresh.
-              href={paths.quiz(slug, row.lessonKey)}
+              href={paths.quiz(row.topicSlug ?? slug, row.lessonKey)}
               sx={{ color: 'common.white', minWidth: 0 }}
             >
               {s.practice}

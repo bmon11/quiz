@@ -103,6 +103,7 @@ export function MainLayout({ children }) {
             </Stack>
 
             {navLink(paths.jeopardy, s.jeopardy, 'solar:widget-4-bold-duotone')}
+            {navLink(paths.tournament, s.tournamentShort, 'solar:cup-star-bold-duotone')}
             {user && navLink(paths.me, s.myProgress, 'solar:chart-square-bold-duotone')}
             {canContribute && navLink(paths.admin, s.admin, 'solar:pen-new-square-bold-duotone')}
 

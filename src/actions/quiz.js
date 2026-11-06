@@ -86,6 +86,21 @@ export const submitAttempt = async (payload) =>
 /** "This question is wrong" — { questionId, reason, suggested?, note?, lang }. */
 export const reportQuestion = async (payload) => (await axios.post(endpoints.report, payload)).data;
 
+/** Tournament mode: { topic, lessons } where each «lesson» is one game (or the mix / predicted deck). */
+export function useTournament() {
+  const { data, error, isLoading, mutate } = useSWR(endpoints.tournament, fetcher, swrOptions);
+  return useMemo(
+    () => ({
+      topic: data?.topic ?? null,
+      decks: data?.lessons ?? [],
+      tournamentLoading: isLoading,
+      tournamentError: error,
+      retry: mutate,
+    }),
+    [data, error, isLoading, mutate]
+  );
+}
+
 // ----------------------------------------------------------------------
 // Jeopardy
 

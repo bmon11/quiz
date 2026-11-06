@@ -47,6 +47,7 @@ export const endpoints = {
   answer: '/quiz/answer',
   report: '/quiz/report',
   jeopardy: { board: '/jeopardy/board', check: '/jeopardy/check' },
+  tournament: '/tournament',
   place: (map, id) => `/places/${map}/${id}`,
   attempts: '/attempts',
   auth: {

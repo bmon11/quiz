@@ -97,6 +97,12 @@ export function AccountMenu() {
           </ListItemIcon>
           {s.myProgress}
         </MenuItem>
+        <MenuItem onClick={() => go(paths.tournament)}>
+          <ListItemIcon>
+            <Iconify icon="solar:cup-star-bold-duotone" />
+          </ListItemIcon>
+          {s.tournament}
+        </MenuItem>
         <MenuItem onClick={() => go(paths.jeopardy)}>
           <ListItemIcon>
             <Iconify icon="solar:widget-4-bold-duotone" />

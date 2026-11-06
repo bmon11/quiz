@@ -254,6 +254,31 @@ export function HomeView() {
         </CardActionArea>
       </Box>
 
+      <Box component={m.div} variants={varFade('inUp')} sx={{ mb: 4, mt: -2 }}>
+        <CardActionArea
+          component={RouterLink}
+          href={paths.tournament}
+          sx={{
+            p: { xs: 2.5, md: 3 },
+            borderRadius: 2,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+            color: 'common.white',
+            background: 'linear-gradient(120deg, #78350F 0%, #B45309 60%, #D97706 100%)',
+          }}
+        >
+          <Iconify icon="solar:cup-star-bold-duotone" width={40} sx={{ flexShrink: 0 }} />
+          <Box sx={{ flex: 1, minWidth: 0 }}>
+            <Typography variant="h5">{s.tournament}</Typography>
+            <Typography variant="body2" sx={{ opacity: 0.9 }}>
+              {s.tournamentTeaser}
+            </Typography>
+          </Box>
+          <Iconify icon="solar:arrow-right-linear" width={24} />
+        </CardActionArea>
+      </Box>
+
       <Stack
         id="categories"
         direction={{ xs: 'column', sm: 'row' }}

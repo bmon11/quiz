@@ -244,6 +244,18 @@ export const STRINGS = {
     sendReport: 'Send report',
     reportThanks: 'Thank you!',
     reportThanksBody: 'An editor will check this question.',
+    // tournament
+    tournament: 'Tournament questions',
+    tournamentShort: 'Tournaments',
+    gameOf: (n, total) => `Deck ${n} / ${total}`,
+    tournamentTeaser: 'Questions asked at real quiz games — replay a whole game',
+    tournamentIntro:
+      'Every question here was asked at a real quiz tournament. Play a whole game in its original order, a random mix, or the questions we predict could come up next.',
+    tournamentMix: 'A random mix of real questions',
+    tournamentPredicted: 'Written in the style of past games, on themes likely to come up',
+    tournamentPhotos: 'Questions read off photos of game sheets',
+    tournamentGames: 'Games',
+    questionsN: (n) => `${n} questions`,
     // jeopardy
     jeopardy: 'Jeopardy',
     jeopardyIntro:
@@ -528,6 +540,18 @@ export const STRINGS = {
     sendReport: 'Илгээх',
     reportThanks: 'Баярлалаа!',
     reportThanksBody: 'Редактор энэ асуултыг шалгана.',
+    // tournament
+    tournament: 'Тэмцээний асуултууд',
+    tournamentShort: 'Тэмцээн',
+    gameOf: (n, total) => `Багц ${n} / ${total}`,
+    tournamentTeaser: 'Жинхэнэ тэмцээнд асуусан асуултууд — тоглолтыг бүтнээр нь давт',
+    tournamentIntro:
+      'Энд байгаа асуулт бүрийг жинхэнэ квиз тэмцээнд асууж байсан. Тоглолтыг анхны дарааллаар нь, холимог байдлаар, эсвэл дараагийн тэмцээнд гарч болзошгүй таамаг асуултуудыг тоглоорой.',
+    tournamentMix: 'Жинхэнэ асуултуудаас санамсаргүй холимог',
+    tournamentPredicted: 'Өмнөх тоглолтуудын хэв маягаар, гарч болзошгүй сэдвүүдээр бичсэн',
+    tournamentPhotos: 'Тоглолтын хуудасны зургаас уншсан асуултууд',
+    tournamentGames: 'Тоглолтууд',
+    questionsN: (n) => `${n} асуулт`,
     // jeopardy
     jeopardy: 'Jeopardy',
     jeopardyIntro:

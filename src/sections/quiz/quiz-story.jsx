@@ -268,7 +268,10 @@ export function QuizStory({ slug, topic, lessonKey, lessonTitle, onClose, onEdge
             </Box>
             {deck?.lesson && (
               <Typography variant="caption" sx={{ opacity: 0.8 }}>
-                {s.lessonOf(deck.lesson.order, deck.lesson.total)}
+                {(slug === 'tournament' ? s.gameOf : s.lessonOf)(
+                  deck.lesson.order,
+                  deck.lesson.total
+                )}
               </Typography>
             )}
             <Box sx={{ flex: 1 }} />
