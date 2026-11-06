@@ -27,6 +27,10 @@ const GROUP_LABELS = {
   titan: { en: 'Titans', mn: 'Титанууд' },
   olympian: { en: 'Olympians', mn: 'Олимпийн бурхад' },
   underworld: { en: 'Underworld', mn: 'Газар доорх ертөнц' },
+  aesir: { en: 'Æsir', mn: 'Асууд' },
+  vanir: { en: 'Vanir', mn: 'Ванууд' },
+  jotunn: { en: 'Giants (jötnar)', mn: 'Аварга (ётун)' },
+  monster: { en: 'Monsters', mn: 'Мангасууд' },
 };
 
 /**
